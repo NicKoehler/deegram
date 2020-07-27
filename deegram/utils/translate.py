@@ -23,7 +23,7 @@ HELP_MSG = (
 	"/start - Ricevi il messaggio di benvenuto\n"
 	"/aiuto - Ricevi questo messaggio\n"
 	"/impostazioni - Cambia le tue preferenze\n"
-	"/info - Ricevi alcune informazioni utili riguardo il bot\n"
+	"/info - Ricevi alcune informazioni utili riguardanti il bot\n"
 	"/stats - Ricevi le statistiche del bot\n"
 )
 

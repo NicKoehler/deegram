@@ -45,7 +45,7 @@ deezer = deethon.Session(DEEZER_TOKEN)
 logger.debug(f'Using deethon v{deethon.__version__}')
 
 bot = TelegramClient(__name__, API_ID, API_HASH, base_logger=telethon_logger).start(bot_token=BOT_TOKEN)
-logger.info("Bot started")
+logger.info("Bot pronto.")
 
 # Saving user preferences locally
 users = {}
@@ -55,19 +55,19 @@ bot.loop.run_until_complete(
         commands=[
             types.BotCommand(
                 command='start',
-                description='Get the welcome message'),
+                description='Ricevi il messaggio di benvenuto'),
             types.BotCommand(
                 command='aiuto',
                 description='Come usare il bot'),
             types.BotCommand(
                 command='settings',
-                description='Change your preferences'),
+                description='Cambia le tue preferenze'),
             types.BotCommand(
                 command='info',
-                description='Get some useful information about the bot'),
+                description='Ricevi alcune informazioni utili riguardanti il bot'),
             types.BotCommand(
                 command='stats',
-                description='Get some statistics about the bot'),
+                description='Ricevi le statistiche del bot'),
         ]
     ))
 )
@@ -76,5 +76,5 @@ bot.loop.run_until_complete(
 async def init_user(event):
     if event.from_id not in users.keys():
         users[event.from_id] = {
-            "quality": "FLAC"
+            "quality": "MP3_320"
         }
