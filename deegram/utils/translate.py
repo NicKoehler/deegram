@@ -6,7 +6,7 @@ WELCOME_MSG = (
 	"Tocca /aiuto per ricevere più informazioni."
 )
 INFO_MSG = (
-	f"👤 Creatori: {', '.join(CREATORS)}\n"
+	f"👤 Devs: {', '.join(CREATORS)}\n"
 
 	f"ℹ Versione: {VERSION}"
 )
@@ -17,7 +17,6 @@ STATS_MSG = (
 	"Spazio Libero: **{}**"
 )
 HELP_MSG = (
-
 	"Cerca un album/traccia o inviami direttamente un link di un album/traccia e la scaricherò per te 😊\n\n"
 	"**Lista dei comandi:**\n"
 	"/start - Ricevi il messaggio di benvenuto\n"

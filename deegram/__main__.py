@@ -34,6 +34,7 @@ async def start(event: Union[NewMessage.Event, Message]):
 @bot.on(events.NewMessage(pattern='/aiuto'))
 async def get_help(event: Union[NewMessage.Event, Message]):
     await event.reply(translate.HELP_MSG)
+    raise events.StopPropagation
 
 
 @bot.on(events.NewMessage(pattern='/info'))
