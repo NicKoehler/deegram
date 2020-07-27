@@ -6,14 +6,14 @@ from .. import bot, users
 
 search_buttons = [
     [
-        Button.switch_inline("Search track 🎧", same_peer=True),
-        Button.switch_inline("Search album 💽", query=".a: ", same_peer=True),
+        Button.switch_inline("Cerca una traccia 🎧", same_peer=True),
+        Button.switch_inline("Cerca un album 💽", query=".a: ", same_peer=True),
     ],
     [Button.inline("❌")],
 ]
 
 
-@bot.on(events.NewMessage(pattern="/settings"))
+@bot.on(events.NewMessage(pattern="/impostazioni"))
 async def settings(event):
     if hasattr(event, "query"):
         answer = event.edit
@@ -21,7 +21,7 @@ async def settings(event):
         answer = event.respond
     await answer(
         "Settings:",
-        buttons=[[Button.inline("Quality 🎧", data="q")], [Button.inline("❌")]],
+        buttons=[[Button.inline("Qualità 🎧", data="q")], [Button.inline("❌")]],
     )
     raise events.StopPropagation
 
@@ -29,10 +29,10 @@ async def settings(event):
 @bot.on(events.CallbackQuery(pattern="q"))
 async def settings_quality(event):
     q = users[event.query.user_id]["quality"]
-    a = "Lossless"
-    b = "High"
-    c = "Medium"
-    d = "Low"
+    a = "Lossless (FLAC)"
+    b = "Alta (MP3 320 KBPS)"
+    c = "Media (MP3 256 KBPS)"
+    d = "Bassa (MP3 128 KBPS)"
     s = " ✅"
 
     if q == "FLAC":
@@ -45,7 +45,7 @@ async def settings_quality(event):
         d += s
 
     await event.edit(
-        "Select song quality: ",
+        "Selezione la qualità: ",
         buttons=[
             [Button.inline(a, data="FLAC"), Button.inline(b, data="MP3_320")],
             [Button.inline(c, data="MP3_256"), Button.inline(d, data="MP3_128")],
@@ -59,15 +59,15 @@ async def callback(event):
     q = event.data.decode("utf-8")
     if users[event.query.user_id]["quality"] != q:
         users[event.query.user_id]["quality"] = q
-        await event.answer("Done!")
+        await event.answer("Fatto!")
         await settings_quality(event)
     else:
-        await event.answer("Already selected!")
+        await event.answer("Già selezionata!")
 
 
 @bot.on(events.CallbackQuery(pattern="❌"))
 async def cancel(event):
-    await event.edit("Canceled.")
+    await event.edit("Annullato.")
     await sleep(1.5)
     await event.delete()
 

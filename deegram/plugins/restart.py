@@ -12,14 +12,14 @@ logger = logging.getLogger(__name__)
 if path.exists('restart.pickle'):
     with open('restart.pickle', 'rb') as status:
         chat, msg_id = pickle.load(status)
-    bot.loop.run_until_complete(bot.edit_message(chat, msg_id, "Restarted Successfully!"))
+    bot.loop.run_until_complete(bot.edit_message(chat, msg_id, "Riavviato correttamente!"))
     remove('restart.pickle')
 
 
-@bot.on(events.NewMessage(pattern='/restart', from_users=OWNER_ID))
+@bot.on(events.NewMessage(pattern='/riavvia', from_users=OWNER_ID))
 async def restart(event):
-    restart_message = await event.reply("Restarting, Please wait!")
+    restart_message = await event.reply("Sto riavviando, ancora qualche secondo!")
     with open('restart.pickle', 'wb') as status:
         pickle.dump([event.chat_id, restart_message.id], status)
-    logger.info('Restarting deegram')
+    logger.info('riavvo in corso')
     execl(executable, executable, "-m", "deegram")

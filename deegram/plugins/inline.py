@@ -18,7 +18,7 @@ async def inline(event):
         album_name = event.text.replace(".a", "").strip()
         if len(album_name) < 1:
             return
-        logger.debug(f'Searching for album: {album_name}')
+        logger.debug(f'Sto cercando l\'album: {album_name}')
         api_search_link = "https://api.deezer.com/search/album?q=" + album_name
 
         data = await fetch_json(api_search_link)
@@ -28,7 +28,7 @@ async def inline(event):
                 builder.article(
                     title=match["title"],
                     text=match["link"],
-                    description=f"Artist: {match['artist']['name']}\nTracks: {match['nb_tracks']}",
+                    description=f"Artista: {match['artist']['name']}\Traccie: {match['nb_tracks']}",
                     thumb=InputWebDocument(
                         url=match["cover_medium"],
                         size=0,
@@ -39,7 +39,7 @@ async def inline(event):
             )
 
     elif len(event.text) > 1:
-        logger.debug(f'Searching for track: {event.text}')
+        logger.debug(f'Sto cercando la traccia: {event.text}')
         api_search_link = "https://api.deezer.com/search?q=" + event.text
 
         data = await fetch_json(api_search_link)
@@ -49,7 +49,7 @@ async def inline(event):
                 builder.article(
                     title=match["title"],
                     text=match["link"],
-                    description=f"Artist: {match['artist']['name']}\nAlbum: {match['album']['title']}",
+                    description=f"Artista: {match['artist']['name']}\nAlbum: {match['album']['title']}",
                     thumb=InputWebDocument(
                         url=match["album"]["cover_medium"],
                         size=0,

@@ -25,7 +25,7 @@ class UploadStatus:
 
     async def start(self) -> None:
         self._start_time = time.time()
-        self._message = await self._event.reply("Uploading...")
+        self._message = await self._event.reply("Sto caricando...")
 
     async def progress(self, current: int, total: int) -> None:
         self._current = current
@@ -33,17 +33,17 @@ class UploadStatus:
         if (time.time() - self._update_time) > 1:
             msg = ""
             if self._track_count:
-                msg += f" 💿 Track {self._track_count} of {self._total_tracks}\n"
+                msg += f" 💿 Traccia {self._track_count} di {self._total_tracks}\n"
             msg += (
-                f"🔼 Uploading... {(self._current / self._total):.1%}\n"
-                f"⚡ Speed: {get_readable_file_size(self.upload_speed)}/s"
+                f"🔼 Caricando... {(self._current / self._total):.1%}\n"
+                f"⚡ Velocità: {get_readable_file_size(self.upload_speed)}/s"
             )
             try:
                 await self._message.edit(msg)
             except MessageNotModifiedError:
-                logger.debug("Message not modified")
+                logger.debug("Messaggio non modificato")
             except ZeroDivisionError:
-                logger.debug("Divided zero")
+                logger.debug("Impossibile dividere per zero")
             else:
                 self._update_time = time.time()
 

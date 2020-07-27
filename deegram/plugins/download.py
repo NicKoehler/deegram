@@ -23,7 +23,7 @@ async def track_link(event: Union[NewMessage.Event, Message]):
     try:
         track = deethon.Track(event.pattern_match.group(1))
     except deethon.errors.DeezerApiError:
-        await event.reply("Track not found.")
+        await event.reply("Traccia non trovata.")
         raise events.StopPropagation
     await event.respond(
         translate.TRACK_MSG.format(
@@ -71,7 +71,7 @@ async def album_link(event: Union[NewMessage.Event, Message]):
     try:
         album = deethon.Album(event.pattern_match.group(1))
     except deethon.errors.DeezerApiError:
-        await event.respond("Not found")
+        await event.respond("Non trovato")
         raise events.StopPropagation
 
     await event.respond(
