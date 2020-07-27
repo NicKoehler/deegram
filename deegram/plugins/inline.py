@@ -13,11 +13,13 @@ logger = logging.getLogger(__name__)
 async def inline(event):
     builder = event.builder
     s = []
+    text = event.text
 
-    if event.text.startswith(".a "):
-        album_name = event.text.replace(".a", "").strip()
-        if len(album_name) < 1:
+    if text.startswith(".a"):
+        album_name = ' '.join(text.split()[1:])
+        if not album_name:
             return
+        album_name = event.text.replace(".a", "").strip()
         logger.debug(f'Sto cercando l\'album: {album_name}')
         api_search_link = "https://api.deezer.com/search/album?q=" + album_name
 
@@ -38,8 +40,8 @@ async def inline(event):
                 ),
             )
 
-    elif event.text.startswith(".p "):
-        playlist_name = event.text.replace(".p", "").strip()
+    elif text.startswith(".p"):
+        playlist_name = ' '.join(text.split()[1:])
         if len(playlist_name) < 1:
             return
         logger.debug(f'Sto cercando la playlist: {playlist_name}')
@@ -62,9 +64,10 @@ async def inline(event):
                 ),
             )
 
-    elif len(event.text) > 1:
-        logger.debug(f'Sto cercando la traccia: {event.text}')
-        api_search_link = "https://api.deezer.com/search?q=" + event.text
+    elif len(text) > 1:
+        print(text)
+        logger.debug(f'Sto cercando la traccia: {text}')
+        api_search_link = "https://api.deezer.com/search?q=" + text
 
         data = await fetch_json(api_search_link)
 
