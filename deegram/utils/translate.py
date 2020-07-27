@@ -26,8 +26,8 @@ HELP_MSG = (
 	"/stats - Ricevi le statistiche del bot\n"
 )
 
-DOWNLOAD_MSG = "Scaricando..."
-UPLOAD_MSG = "Caricando..."
+DOWNLOAD_MSG = "Recupero i dati neccessari per il download..."
+UPLOAD_MSG = "Carico..."
 END_MSG = "Finito."
 ALBUM_MSG = (
 	"💽 Album: {}\n"

@@ -91,6 +91,11 @@ async def album_link(event: Union[NewMessage.Event, Message]):
     await msg.delete()
     async with bot.action(event.chat_id, "audio"):
         for num, track in enumerate(tracks):
+
+            if not track:
+                await bot.send_message(event.chat_id, f"Non posso scaricare\n{album.artist} - {album.tracks[num].title}")
+                continue
+
             file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
             file_name = f"{album.artist} - {album.tracks[num].title}{file_ext}"
             upload_status = UploadStatus(event, num + 1, album.total_tracks)
@@ -144,8 +149,11 @@ async def playlist_link(event: Union[NewMessage.Event, Message]):
     await msg.delete()
     async with bot.action(event.chat_id, "audio"):
         for num, track in enumerate(tracks):
+            if not track:
+                await bot.send_message(event.chat_id, f"Non posso scaricare\n{playlist.tracks[num].artist} - {playlist.tracks[num].title}")
+                continue
             file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
-            file_name = f"{playlist.track.artist.name} - {playlist.tracks[num].title}{file_ext}"
+            file_name = f"{playlist.tracks[num].artist} - {playlist.tracks[num].title}{file_ext}"
             upload_status = UploadStatus(event, num + 1, playlist.nb_tracks)
             await upload_status.start()
             r = await upload_file(
@@ -163,7 +171,7 @@ async def playlist_link(event: Union[NewMessage.Event, Message]):
                         voice=False,
                         title=playlist.tracks[num].title,
                         duration=playlist.tracks[num].duration,
-                        performer=playlist.artist,
+                        performer=playlist.tracks[num].artist,
                     )
                 ],
             )
