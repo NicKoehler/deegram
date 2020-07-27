@@ -42,6 +42,4 @@ def get_readable_time(secs: float) -> str:
         ris += 'o' if seconds == 1 else 'i'
         temp.append(ris)
 
-    result = base + ', '.join(temp) + '.'
-
-    return result
+    return ', '.join(temp) + '.'

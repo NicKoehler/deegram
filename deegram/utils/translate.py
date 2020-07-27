@@ -11,7 +11,7 @@ INFO_MSG = (
 	f"ℹ Versione: {VERSION}"
 )
 STATS_MSG = (
-	"Tempo attivo Bot: **{}**\n"
+	"Il bot è attivo da: **{}**\n"
 	"Spazio totale disco: **{}**\n"
 	"Spazio Utilizzato: **{}**\n"
 	"Spazio Libero: **{}**"
