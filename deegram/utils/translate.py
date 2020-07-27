@@ -1,44 +1,47 @@
 VERSION = "0.1.1"
-CREATOR = "@aykut"
-BOT_NAME = "Deegram"
+CREATORS = ["@aykut", "@NicKoehler"]
+BOT_NAME = "Deezer downloader"
 WELCOME_MSG = (
-	f"🎶🎵 Welcome to {BOT_NAME} 🎵🎶\n\n"
-	"Click /help for more information."
+	f"🎵 Benvenuto {BOT_NAME} 🎵\n\n"
+	"Tocca /aiuto per ricevere più informazioni."
 )
 INFO_MSG = (
-	f"👤 Creator: {CREATOR}\n"
-	f"ℹ Version: {VERSION}"
+	f"👤 Creatori: {', '.join(CREATORS)}\n"
+
+	f"ℹ Versione: {VERSION}"
 )
 STATS_MSG = (
-	"Bot Uptime: {}\n"
-	"Total disk space: {}\n"
-	"Used: {}\n"
-	"Free: {}"
+	"Tempo attivo Bot: {}\n"
+	"Spazio totale disco: {}\n"
+	"Utilizzato: {}\n"
+	"Libero: {}"
 )
 HELP_MSG = (
-	"Search by album or tack or just send me a Deezer track or album link and I will download it for you :)\n\n"
-	"**List of all commands:**\n"
-	"/start - Get the welcome message\n"
-	"/help - Get this message\n"
-	"/settings - Change your preferences\n"
-	"/info - Get some useful information about the bot\n"
-	"/stats - Get some statistics about the bot\n"
+
+	"Cerca un album/traccia o inviami direttamente un link di un album/traccia e la scaricherò per te 😊\n\n"
+	"**Lista dei comandi:**\n"
+	"/start - Ricevi il messaggio di benvenuto\n"
+	"/aiuto - Ricevi questo messaggio\n"
+	"/impostazioni - Cambia le tue preferenze\n"
+	"/info - Ricevi alcune informazioni utili riguardo il bot\n"
+	"/stats - Ricevi le statistiche del bot\n"
 )
-DOWNLOAD_MSG = "Downloading…"
-UPLOAD_MSG = "Uploading…"
-END_MSG = "Finished."
+
+DOWNLOAD_MSG = "Scaricando..."
+UPLOAD_MSG = "Caricando..."
+END_MSG = "Finito."
 ALBUM_MSG = (
 	"💽 Album: {}\n"
-	"👤 Artist: {}\n"
-	"📅 Date: {}\n"
-	"🎧 Total tracks: {}"
+	"👤 Artista: {}\n"
+	"📅 Data: {}\n"
+	"🎧 Tracce totali: {}"
 )
 TRACK_MSG = (
-	"🎧 Track: {}\n"
-	"👤 Artist: {}\n"
+	"🎧 Traccia: {}\n"
+	"👤 Artista: {}\n"
 	"💽 Album: {}\n"
-	"📅 Date: {}"
+	"📅 Data: {}"
 )
-CHOOSE = "Choose:"
-SEARCH_ALBUM = "Search album 💽"
-SEARCH_TRACK = "Search track 🎧"
+CHOOSE = "Scegli cosa fare:"
+SEARCH_ALBUM = "Cerca un album 💽"
+SEARCH_TRACK = "Cerca una traccia 🎧"

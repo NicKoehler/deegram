@@ -57,8 +57,8 @@ bot.loop.run_until_complete(
                 command='start',
                 description='Get the welcome message'),
             types.BotCommand(
-                command='help',
-                description='How to use the bot'),
+                command='aiuto',
+                description='Come usare il bot'),
             types.BotCommand(
                 command='settings',
                 description='Change your preferences'),
