@@ -42,6 +42,6 @@ TRACK_MSG = (
 	"💽 Album: {}\n"
 	"📅 Data: {}"
 )
-CHOOSE = "Scegli cosa fare con"
+CHOOSE = "Scegli cosa fare:"
 SEARCH_ALBUM = "Cerca un album 💽"
 SEARCH_TRACK = "Cerca una traccia 🎧"

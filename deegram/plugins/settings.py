@@ -59,7 +59,7 @@ async def callback(event):
     q = event.data.decode("utf-8")
     if users[event.query.user_id]["quality"] != q:
         users[event.query.user_id]["quality"] = q
-        await event.answer("Fatto!")
+        await event.answer("Qualità impostata!")
         await settings_quality(event)
     else:
         await event.answer("Già selezionata!")
