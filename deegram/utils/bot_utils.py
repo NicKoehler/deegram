@@ -18,6 +18,8 @@ def get_readable_file_size(size_in_bytes: Union[int, float]) -> str:
 
 def get_readable_time(secs: float) -> str:
 
+    secs = int(secs)
+
     seconds = (secs % 3600) % 60
     minutes = (secs % 3600) // 60
     hours = (secs // 3600) % 24
@@ -26,19 +28,19 @@ def get_readable_time(secs: float) -> str:
     temp = []
 
     if days > 0:
-        ris = '<b>{}</b> giorn'.format(days)
+        ris = '{} giorn'.format(days)
         ris += 'o' if days == 1 else 'i'
         temp.append(ris)
     if hours > 0:
-        ris = '<b>{}</b> or'.format(hours)
+        ris = '{} or'.format(hours)
         ris += 'a' if hours == 1 else 'e'
         temp.append(ris)
     if minutes > 0:
-        ris = '<b>{}</b> minut'.format(minutes)
+        ris = '{} minut'.format(minutes)
         ris += 'o' if minutes == 1 else 'i'
         temp.append(ris)
     if seconds > 0:
-        ris = '<b>{}</b> second'.format(seconds)
+        ris = '{} second'.format(seconds)
         ris += 'o' if seconds == 1 else 'i'
         temp.append(ris)
 
