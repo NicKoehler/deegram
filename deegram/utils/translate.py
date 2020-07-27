@@ -41,6 +41,11 @@ TRACK_MSG = (
 	"💽 Album: {}\n"
 	"📅 Data: {}"
 )
+PLAYLIST_MSG = (
+	"🎵 Titolo: {}\n"
+	"🎧 Tracce totali: {}"
+)
 CHOOSE = "Scegli cosa fare:"
 SEARCH_ALBUM = "Cerca un album 💽"
 SEARCH_TRACK = "Cerca una traccia 🎧"
+SEARCH_PLAYLIST = "Cerca una playlist 🎵"

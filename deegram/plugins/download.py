@@ -11,6 +11,7 @@ from ..helper.download_status import DownloadStatus
 from ..helper.upload_status import UploadStatus
 from ..utils import translate
 from ..utils.fast_download import upload_file
+from ..utils.bot_utils import get_italian_date_format
 
 if TYPE_CHECKING:
     from typing import Union
@@ -30,7 +31,7 @@ async def track_link(event: Union[NewMessage.Event, Message]):
             track.title,
             track.artist,
             track.album.title,
-            track.release_date
+            get_italian_date_format(track.release_date)
         ),
         file=track.album.cover_xl)
     quality = users[event.chat_id]["quality"]
@@ -78,7 +79,7 @@ async def album_link(event: Union[NewMessage.Event, Message]):
         translate.ALBUM_MSG.format(
             album.title,
             album.artist,
-            album.release_date,
+            get_italian_date_format(album.release_date),
             album.total_tracks,
         ),
         file=album.cover_xl,
@@ -110,6 +111,59 @@ async def album_link(event: Union[NewMessage.Event, Message]):
                         title=album.tracks[num].title,
                         duration=album.tracks[num].duration,
                         performer=album.artist,
+                    )
+                ],
+            )
+            await msg.delete()
+
+    await event.reply(translate.END_MSG)
+    raise events.StopPropagation
+
+
+@bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?deezer\.com/(?:\w+/)?playlist/(\d+)"))
+async def playlist_link(event: Union[NewMessage.Event, Message]):
+    try:
+
+        playlist = deethon.Playlist(event.pattern_match.group(1))
+    except deethon.errors.DeezerApiError:
+        await event.respond("Non trovato")
+        raise events.StopPropagation
+
+    await event.respond(
+        translate.PLAYLIST_MSG.format(
+            playlist.title,
+            playlist.nb_tracks,
+        ),
+        file=playlist.picture_xl,
+    )
+
+    quality = users[event.from_id]["quality"]
+    msg = await event.reply(translate.DOWNLOAD_MSG)
+    tracks = deezer.download_playlist(playlist, quality, stream=True)
+
+    await msg.delete()
+    async with bot.action(event.chat_id, "audio"):
+        for num, track in enumerate(tracks):
+            file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
+            file_name = f"{playlist.track.artist.name} - {playlist.tracks[num].title}{file_ext}"
+            upload_status = UploadStatus(event, num + 1, playlist.nb_tracks)
+            await upload_status.start()
+            r = await upload_file(
+                file_name=file_name,
+                client=bot,
+                file=open(track, 'rb'),
+                progress_callback=upload_status.progress
+            )
+            await upload_status.finished()
+            await bot.send_file(
+                event.chat_id,
+                r,
+                attributes=[
+                    DocumentAttributeAudio(
+                        voice=False,
+                        title=playlist.tracks[num].title,
+                        duration=playlist.tracks[num].duration,
+                        performer=playlist.artist,
                     )
                 ],
             )

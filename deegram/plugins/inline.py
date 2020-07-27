@@ -38,6 +38,30 @@ async def inline(event):
                 ),
             )
 
+    elif event.text.startswith(".p "):
+        playlist_name = event.text.replace(".p", "").strip()
+        if len(playlist_name) < 1:
+            return
+        logger.debug(f'Sto cercando la playlist: {playlist_name}')
+        api_search_link = "https://api.deezer.com/search/playlist?q=" + playlist_name
+
+        data = await fetch_json(api_search_link)
+
+        for match in data["data"]:
+            s += (
+                builder.article(
+                    title=match["title"],
+                    text=match["link"],
+                    description=f"Tracce: {match['nb_tracks']}",
+                    thumb=InputWebDocument(
+                        url=match["picture_medium"],
+                        size=0,
+                        mime_type="image/jpeg",
+                        attributes=[],
+                    ),
+                ),
+            )
+
     elif len(event.text) > 1:
         logger.debug(f'Sto cercando la traccia: {event.text}')
         api_search_link = "https://api.deezer.com/search?q=" + event.text
