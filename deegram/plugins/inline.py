@@ -65,7 +65,7 @@ async def inline(event):
             )
 
     elif len(text) > 1:
-        print(text)
+
         logger.debug(f'Sto cercando la traccia: {text}')
         api_search_link = "https://api.deezer.com/search?q=" + text
 
