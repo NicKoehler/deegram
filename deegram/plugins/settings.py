@@ -20,7 +20,7 @@ async def settings(event):
     else:
         answer = event.respond
     await answer(
-        "Settings:",
+        "Impostazioni:",
         buttons=[[Button.inline("Qualità 🎧", data="q")], [Button.inline("❌")]],
     )
     raise events.StopPropagation

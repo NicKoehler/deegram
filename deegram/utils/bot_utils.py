@@ -11,25 +11,37 @@ def get_readable_file_size(size_in_bytes: Union[int, float]) -> str:
         size_in_bytes /= 1024
         index += 1
     try:
-        return f"{round(size_in_bytes, 2)}{SIZE_UNITS[index]}"
+        return f"{round(size_in_bytes, 2)} {SIZE_UNITS[index]}"
     except IndexError:
-        return "File too large"
+        return "File troppo grande."
 
 
 def get_readable_time(secs: float) -> str:
-    result = ""
-    (days, remainder) = divmod(secs, 86400)
-    days = int(days)
-    if days != 0:
-        result += f"{days}d"
-    (hours, remainder) = divmod(remainder, 3600)
-    hours = int(hours)
-    if hours != 0:
-        result += f"{hours}h"
-    (minutes, seconds) = divmod(remainder, 60)
-    minutes = int(minutes)
-    if minutes != 0:
-        result += f"{minutes}m"
-    seconds = int(seconds)
-    result += f"{seconds}s"
+
+    seconds = (secs % 3600) % 60
+    minutes = (secs % 3600) // 60
+    hours = (secs // 3600) % 24
+    days = secs // 3600 // 24
+
+    lista = []
+
+    if days > 0:
+        ris = '<b>{}</b> giorn'.format(days)
+        ris += 'o' if days == 1 else 'i'
+        lista.append(ris)
+    if hours > 0:
+        ris = '<b>{}</b> or'.format(hours)
+        ris += 'a' if hours == 1 else 'e'
+        lista.append(ris)
+    if minutes > 0:
+        ris = '<b>{}</b> minut'.format(minutes)
+        ris += 'o' if minutes == 1 else 'i'
+        lista.append(ris)
+    if seconds > 0:
+        ris = '<b>{}</b> second'.format(seconds)
+        ris += 'o' if seconds == 1 else 'i'
+        lista.append(ris)
+
+    result = base + ', '.join(lista) + '.'
+
     return result
