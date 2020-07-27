@@ -28,7 +28,7 @@ async def inline(event):
                 builder.article(
                     title=match["title"],
                     text=match["link"],
-                    description=f"Artista: {match['artist']['name']}\Traccie: {match['nb_tracks']}",
+                    description=f"Artista: {match['artist']['name']} ({match['nb_tracks']})",
                     thumb=InputWebDocument(
                         url=match["cover_medium"],
                         size=0,

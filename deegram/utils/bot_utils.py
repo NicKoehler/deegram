@@ -23,25 +23,25 @@ def get_readable_time(secs: float) -> str:
     hours = (secs // 3600) % 24
     days = secs // 3600 // 24
 
-    lista = []
+    temp = []
 
     if days > 0:
         ris = '<b>{}</b> giorn'.format(days)
         ris += 'o' if days == 1 else 'i'
-        lista.append(ris)
+        temp.append(ris)
     if hours > 0:
         ris = '<b>{}</b> or'.format(hours)
         ris += 'a' if hours == 1 else 'e'
-        lista.append(ris)
+        temp.append(ris)
     if minutes > 0:
         ris = '<b>{}</b> minut'.format(minutes)
         ris += 'o' if minutes == 1 else 'i'
-        lista.append(ris)
+        temp.append(ris)
     if seconds > 0:
         ris = '<b>{}</b> second'.format(seconds)
         ris += 'o' if seconds == 1 else 'i'
-        lista.append(ris)
+        temp.append(ris)
 
-    result = base + ', '.join(lista) + '.'
+    result = base + ', '.join(temp) + '.'
 
     return result

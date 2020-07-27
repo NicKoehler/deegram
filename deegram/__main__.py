@@ -65,7 +65,7 @@ async def search(event: Union[NewMessage.Event, Message]):
         search_query = ''
     else:
         search_query = event.text
-    await event.respond(translate.CHOOSE, buttons=[
+    await event.respond(f"{translate.CHOOSE} \"{search_query}\":", buttons=[
         [Button.switch_inline(translate.SEARCH_TRACK, query=search_query, same_peer=True),
          Button.switch_inline(translate.SEARCH_ALBUM, query=".a " + search_query, same_peer=True)],
         [Button.inline('❌')]

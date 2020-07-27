@@ -2,7 +2,7 @@ VERSION = "0.1.1"
 CREATORS = ["@aykut", "@NicKoehler"]
 BOT_NAME = "Deezer downloader"
 WELCOME_MSG = (
-	f"🎵 Benvenuto {BOT_NAME} 🎵\n\n"
+	f"🎵 Benvenuto su {BOT_NAME} 🎵\n\n"
 	"Tocca /aiuto per ricevere più informazioni."
 )
 INFO_MSG = (
@@ -42,6 +42,6 @@ TRACK_MSG = (
 	"💽 Album: {}\n"
 	"📅 Data: {}"
 )
-CHOOSE = "Scegli cosa fare:"
+CHOOSE = "Scegli cosa fare con"
 SEARCH_ALBUM = "Cerca un album 💽"
 SEARCH_TRACK = "Cerca una traccia 🎧"
