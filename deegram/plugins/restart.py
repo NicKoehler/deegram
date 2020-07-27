@@ -18,7 +18,7 @@ if path.exists('restart.pickle'):
 
 @bot.on(events.NewMessage(pattern='/riavvia', from_users=OWNER_ID))
 async def restart(event):
-    restart_message = await event.reply("Sto riavviando, ancora qualche secondo!")
+    restart_message = await event.reply("Sto riavviando...")
     with open('restart.pickle', 'wb') as status:
         pickle.dump([event.chat_id, restart_message.id], status)
     logger.info('riavvo in corso')
