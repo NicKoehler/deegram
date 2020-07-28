@@ -61,6 +61,13 @@ async def stats(event: Union[NewMessage.Event, Message]):
     raise events.StopPropagation
 
 
+@bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?"))
+async def link_not_valid(event: Union[NewMessage.Event, Message]):
+
+    await event.reply("Link non valido.")
+    raise events.StopPropagation
+
+
 @bot.on(events.NewMessage())
 async def search(event: Union[NewMessage.Event, Message]):
     if event.text.startswith('/'):

@@ -4,14 +4,6 @@ from telethon import Button, events
 
 from .. import bot, users
 
-search_buttons = [
-    [
-        Button.switch_inline("Cerca una traccia 🎧", same_peer=True),
-        Button.switch_inline("Cerca un album 💽", query=".a: ", same_peer=True),
-    ],
-    [Button.inline("❌")],
-]
-
 
 @bot.on(events.NewMessage(pattern="/impostazioni"))
 async def settings(event):
@@ -28,7 +20,11 @@ async def settings(event):
 
 @bot.on(events.CallbackQuery(pattern="q"))
 async def settings_quality(event):
+    if event.query.user_id not in users:
+        users[event.query.user_id] = {"quality": "MP3_320"}
+
     q = users[event.query.user_id]["quality"]
+
     a = "Lossless (FLAC)"
     b = "Alta (MP3 320 KBPS)"
     c = "Media (MP3 256 KBPS)"
@@ -49,7 +45,7 @@ async def settings_quality(event):
         buttons=[
             [Button.inline(a, data="FLAC"), Button.inline(b, data="MP3_320")],
             [Button.inline(c, data="MP3_256"), Button.inline(d, data="MP3_128")],
-            [Button.inline("◀️"), Button.inline("❌")],
+            [Button.inline("◀️"), Button.inline("Chiudi")],
         ],
     )
 
@@ -57,6 +53,10 @@ async def settings_quality(event):
 @bot.on(events.CallbackQuery(pattern=r"(FLAC|MP3_\d{3})"))
 async def callback(event):
     q = event.data.decode("utf-8")
+
+    if event.query.user_id not in users:
+        users[event.query.user_id] = {"quality": q}
+
     if users[event.query.user_id]["quality"] != q:
         users[event.query.user_id]["quality"] = q
         await event.answer("Qualità impostata!")
@@ -69,6 +69,11 @@ async def callback(event):
 async def cancel(event):
     await event.edit("Annullato.")
     await sleep(1.5)
+    await event.delete()
+
+
+@bot.on(events.CallbackQuery(pattern="Chiudi"))
+async def cancel(event):
     await event.delete()
 
 

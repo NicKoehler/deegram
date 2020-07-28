@@ -35,6 +35,7 @@ async def track_link(event: Union[NewMessage.Event, Message]):
         ),
         file=track.album.cover_xl)
     quality = users[event.chat_id]["quality"]
+    users[event.chat_id]["downloading"] = True
     download_status = DownloadStatus(event)
     await download_status.start()
     file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
@@ -65,6 +66,7 @@ async def track_link(event: Union[NewMessage.Event, Message]):
             ],
         )
     await event.reply(translate.END_MSG)
+    users[event.chat_id]["downloading"] = False
     raise events.StopPropagation
 
 
@@ -88,10 +90,13 @@ async def track_link(event: Union[NewMessage.Event, Message]):
     )
 
     quality = users[event.chat_id]["quality"]
+    users[event.chat_id]["downloading"] = True
 
     async with bot.action(event.chat_id, "audio"):
         for num, track in enumerate(album.tracks):
-
+            if users[event.chat_id]["stopped"]:
+                users[event.chat_id]['stopped'] = False
+                break
             download_status = DownloadStatus(event, num + 1, album.total_tracks)
             await download_status.start()
             file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
@@ -130,6 +135,7 @@ async def track_link(event: Union[NewMessage.Event, Message]):
                 )
 
     await event.reply(translate.END_MSG)
+    users[event.chat_id]["downloading"] = False
     raise events.StopPropagation
 
 
@@ -154,7 +160,9 @@ async def track_link(event: Union[NewMessage.Event, Message]):
 
     async with bot.action(event.chat_id, "audio"):
         for num, track in enumerate(playlist.tracks):
-
+            if users[event.chat_id]["stopped"]:
+                users[event.chat_id]['stopped'] = False
+                break
             download_status = DownloadStatus(event, num + 1, playlist.nb_tracks)
             await download_status.start()
             file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
@@ -193,4 +201,5 @@ async def track_link(event: Union[NewMessage.Event, Message]):
                 )
 
     await event.reply(translate.END_MSG)
+    users[event.chat_id]["downloading"] = False
     raise events.StopPropagation

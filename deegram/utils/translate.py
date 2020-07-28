@@ -17,7 +17,7 @@ STATS_MSG = (
 	"Spazio Libero: **{}**"
 )
 HELP_MSG = (
-	"Cerca un album/traccia o inviami direttamente un link di un album/traccia e la scaricherò per te 😊\n\n"
+	"Cerca una traccia/album/playlist o inviami direttamente il link di una traccia/album/playlist e la scaricherò per te 😊\n\n"
 	"**Lista dei comandi:**\n"
 	"/start - Ricevi il messaggio di benvenuto\n"
 	"/aiuto - Ricevi questo messaggio\n"
@@ -32,14 +32,14 @@ END_MSG = "Finito."
 ALBUM_MSG = (
 	"💽 Album: {}\n"
 	"👤 Artista: {}\n"
-	"📅 Data: {}\n"
+	"📅 Data di rilascio: {}\n"
 	"🎧 Tracce totali: {}"
 )
 TRACK_MSG = (
 	"🎧 Traccia: {}\n"
 	"👤 Artista: {}\n"
 	"💽 Album: {}\n"
-	"📅 Data: {}"
+	"📅 Data di rilascio: {}"
 )
 PLAYLIST_MSG = (
 	"🎵 Titolo: {}\n"

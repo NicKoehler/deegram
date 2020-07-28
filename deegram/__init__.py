@@ -63,6 +63,9 @@ bot.loop.run_until_complete(
                 command='impostazioni',
                 description='Cambia le tue preferenze'),
             types.BotCommand(
+                command='stop',
+                description='Ferma il download'),
+            types.BotCommand(
                 command='info',
                 description='Ricevi alcune informazioni utili riguardanti il bot'),
             types.BotCommand(
@@ -76,5 +79,7 @@ bot.loop.run_until_complete(
 async def init_user(event):
     if event.from_id not in users.keys():
         users[event.from_id] = {
-            "quality": "MP3_320"
+            "quality": "MP3_320",
+            "downloading": False,
+            "stopped": False
         }
