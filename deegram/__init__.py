@@ -60,11 +60,11 @@ bot.loop.run_until_complete(
                 command='aiuto',
                 description='Come usare il bot'),
             types.BotCommand(
+                command='stop',
+                description='Ferma il download di album/playlist'),
+            types.BotCommand(
                 command='impostazioni',
                 description='Cambia le tue preferenze'),
-            types.BotCommand(
-                command='stop',
-                description='Ferma il download'),
             types.BotCommand(
                 command='info',
                 description='Ricevi alcune informazioni utili riguardanti il bot'),

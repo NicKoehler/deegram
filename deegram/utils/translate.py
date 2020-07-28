@@ -21,6 +21,7 @@ HELP_MSG = (
 	"**Lista dei comandi:**\n"
 	"/start - Ricevi il messaggio di benvenuto\n"
 	"/aiuto - Ricevi questo messaggio\n"
+	"/stop - Ferma il download di album/playlist\n"
 	"/impostazioni - Cambia le tue preferenze\n"
 	"/info - Ricevi alcune informazioni utili riguardanti il bot\n"
 	"/stats - Ricevi le statistiche del bot\n"
