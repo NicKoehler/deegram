@@ -21,6 +21,11 @@ if TYPE_CHECKING:
 
 @bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?deezer\.com/(?:\w+/)?track/(\d+)"))
 async def track_link(event: Union[NewMessage.Event, Message]):
+
+    if users[event.chat_id]["downloading"]:
+        await event.reply(translate.USER_IS_DOWNLOADING)
+        raise events.StopPropagation
+
     try:
         track = deethon.Track(event.pattern_match.group(1))
     except deethon.errors.DeezerApiError:
@@ -72,6 +77,10 @@ async def track_link(event: Union[NewMessage.Event, Message]):
 
 @bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?deezer\.com/(?:\w+/)?album/(\d+)"))
 async def track_link(event: Union[NewMessage.Event, Message]):
+
+    if users[event.chat_id]["downloading"]:
+        await event.reply(translate.USER_IS_DOWNLOADING)
+        raise events.StopPropagation
 
     try:
         album = deethon.Album(event.pattern_match.group(1))
@@ -141,6 +150,10 @@ async def track_link(event: Union[NewMessage.Event, Message]):
 
 @bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?deezer\.com/(?:\w+/)?playlist/(\d+)"))
 async def track_link(event: Union[NewMessage.Event, Message]):
+
+    if users[event.chat_id]["downloading"]:
+        await event.reply(translate.USER_IS_DOWNLOADING)
+        raise events.StopPropagation
 
     try:
         playlist = deethon.Playlist(event.pattern_match.group(1))

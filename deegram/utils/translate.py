@@ -50,3 +50,5 @@ CHOOSE = "Scegli cosa fare:"
 SEARCH_ALBUM = "Cerca un album 💽"
 SEARCH_TRACK = "Cerca una traccia 🎧"
 SEARCH_PLAYLIST = "Cerca una playlist 🎵"
+
+USER_IS_DOWNLOADING = "Stai già scaricando delle tracce.\nRiprova al termine o premi /stop per fermare il download in corso."
