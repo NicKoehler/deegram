@@ -84,5 +84,5 @@ async def search(event: Union[NewMessage.Event, Message]):
 
 with bot:
     bot.run_until_disconnected()
-    logger.info('Bot stopped')
+    logger.info('Bot fermato.')
     bot.loop.run_until_complete(fetch.session.close())
