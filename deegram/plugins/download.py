@@ -103,47 +103,46 @@ async def track_link(event: Union[NewMessage.Event, Message]):
     quality = users[event.chat_id]["quality"]
     users[event.chat_id]["downloading"] = True
 
-    async with bot.action(event.chat_id, "audio"):
-        for num, track in enumerate(album.tracks):
-            if users[event.chat_id]["stopped"]:
-                users[event.chat_id]['stopped'] = False
-                break
-            download_status = DownloadStatus(event, num + 1, album.total_tracks)
-            await download_status.start()
-            file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
+    for num, track in enumerate(album.tracks):
+        if users[event.chat_id]["stopped"]:
+            users[event.chat_id]['stopped'] = False
+            break
+        download_status = DownloadStatus(event, num + 1, album.total_tracks)
+        await download_status.start()
+        file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
 
-            if not file:
-                await bot.send_message(event.chat_id, f"Non posso scaricare\n{track.artist} - {track.title}")
-                await download_status.finished()
-                continue
-
+        if not file:
+            await bot.send_message(event.chat_id, f"Non posso scaricare\n{track.artist} - {track.title}")
             await download_status.finished()
-            file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
-            file_name = track.artist + " - " + track.title + file_ext
-            upload_status = UploadStatus(event, num + 1, album.total_tracks)
-            await upload_status.start()
-            
-            async with bot.action(event.chat_id, 'audio'):
-                uploaded_file = await upload_file(
-                    file_name=file_name,
-                    client=bot,
-                    file=open(file, 'rb'),
-                    progress_callback=upload_status.progress,
-                )
-                await upload_status.finished()
-                await bot.send_file(
-                    event.chat_id,
-                    uploaded_file,
-                    thumb=track.album.cover_medium,
-                    attributes=[
-                        DocumentAttributeAudio(
-                            voice=False,
-                            title=track.title,
-                            duration=track.duration,
-                            performer=track.artist,
-                        )
-                    ],
-                )
+            continue
+
+        await download_status.finished()
+        file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
+        file_name = track.artist + " - " + track.title + file_ext
+        upload_status = UploadStatus(event, num + 1, album.total_tracks)
+        await upload_status.start()
+        
+        async with bot.action(event.chat_id, 'audio'):
+            uploaded_file = await upload_file(
+                file_name=file_name,
+                client=bot,
+                file=open(file, 'rb'),
+                progress_callback=upload_status.progress,
+            )
+            await upload_status.finished()
+            await bot.send_file(
+                event.chat_id,
+                uploaded_file,
+                thumb=track.album.cover_medium,
+                attributes=[
+                    DocumentAttributeAudio(
+                        voice=False,
+                        title=track.title,
+                        duration=track.duration,
+                        performer=track.artist,
+                    )
+                ],
+            )
 
     await event.reply(translate.END_MSG)
     users[event.chat_id]["downloading"] = False
@@ -173,47 +172,46 @@ async def track_link(event: Union[NewMessage.Event, Message]):
 
     quality = users[event.chat_id]["quality"]
 
-    async with bot.action(event.chat_id, "audio"):
-        for num, track in enumerate(playlist.tracks):
-            if users[event.chat_id]["stopped"]:
-                users[event.chat_id]['stopped'] = False
-                break
-            download_status = DownloadStatus(event, num + 1, playlist.nb_tracks)
-            await download_status.start()
-            file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
+    for num, track in enumerate(playlist.tracks):
+        if users[event.chat_id]["stopped"]:
+            users[event.chat_id]['stopped'] = False
+            break
+        download_status = DownloadStatus(event, num + 1, playlist.nb_tracks)
+        await download_status.start()
+        file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
 
-            if not file:
-                await bot.send_message(event.chat_id, f"Non posso scaricare\n{track.artist} - {track.title}")
-                await download_status.finished()
-                continue
-
+        if not file:
+            await bot.send_message(event.chat_id, f"Non posso scaricare\n{track.artist} - {track.title}")
             await download_status.finished()
-            file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
-            file_name = track.artist + " - " + track.title + file_ext
-            upload_status = UploadStatus(event, num + 1, playlist.nb_tracks)
-            await upload_status.start()
-            
-            async with bot.action(event.chat_id, 'audio'):
-                uploaded_file = await upload_file(
-                    file_name=file_name,
-                    client=bot,
-                    file=open(file, 'rb'),
-                    progress_callback=upload_status.progress,
-                )
-                await upload_status.finished()
-                await bot.send_file(
-                    event.chat_id,
-                    uploaded_file,
-                    thumb=track.album.cover_medium,
-                    attributes=[
-                        DocumentAttributeAudio(
-                            voice=False,
-                            title=track.title,
-                            duration=track.duration,
-                            performer=track.artist,
-                        )
-                    ],
-                )
+            continue
+
+        await download_status.finished()
+        file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
+        file_name = track.artist + " - " + track.title + file_ext
+        upload_status = UploadStatus(event, num + 1, playlist.nb_tracks)
+        await upload_status.start()
+        
+        async with bot.action(event.chat_id, 'audio'):
+            uploaded_file = await upload_file(
+                file_name=file_name,
+                client=bot,
+                file=open(file, 'rb'),
+                progress_callback=upload_status.progress,
+            )
+            await upload_status.finished()
+            await bot.send_file(
+                event.chat_id,
+                uploaded_file,
+                thumb=track.album.cover_medium,
+                attributes=[
+                    DocumentAttributeAudio(
+                        voice=False,
+                        title=track.title,
+                        duration=track.duration,
+                        performer=track.artist,
+                    )
+                ],
+            )
 
     await event.reply(translate.END_MSG)
     users[event.chat_id]["downloading"] = False
