@@ -17,7 +17,7 @@ STATS_MSG = (
 	"Spazio Libero: **{}**"
 )
 HELP_MSG = (
-	"Cerca una traccia/album/playlist o inviami direttamente il link di una traccia/album/playlist e la scaricherò per te 😊\n\n"
+	"Cerca una traccia/album/playlist o inviami direttamente il link deezer di una traccia/album/playlist e la scaricherò per te 😊\n\n"
 	"**Lista dei comandi:**\n"
 	"/start - Ricevi il messaggio di benvenuto\n"
 	"/aiuto - Ricevi questo messaggio\n"

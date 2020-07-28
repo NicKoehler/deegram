@@ -3,7 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import deethon
-from telethon import events
+import requests
+from telethon import events, Button
+from json.decoder import JSONDecodeError
 from telethon.tl.types import DocumentAttributeAudio
 
 from .. import bot, users, deezer
@@ -216,3 +218,22 @@ async def track_link(event: Union[NewMessage.Event, Message]):
     await event.reply(translate.END_MSG)
     users[event.chat_id]["downloading"] = False
     raise events.StopPropagation
+
+@bot.on(events.NewMessage(pattern=r"(.+)?(https?://www\.youtube\.com/watch\?v=.+)"))
+async def youtube_link(event: Union[NewMessage.Event, Message]):
+
+    if users[event.chat_id]["downloading"]:
+        await event.reply(translate.USER_IS_DOWNLOADING)
+        raise events.StopPropagation
+
+    par = {"format": "json", "url": event.pattern_match.group(2)}
+    try:
+        track_name = requests.get("https://www.youtube.com/oembed", par).json()['title']
+
+        await event.respond("Vuoi cercare questa canzone? Tocca il tasto qui sotto", buttons=[
+            [Button.switch_inline(translate.SEARCH_TRACK, query=track_name, same_peer=True)]
+        ])
+        raise events.StopPropagation
+
+    except JSONDecodeError:
+        pass
