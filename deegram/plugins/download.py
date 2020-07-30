@@ -45,7 +45,13 @@ async def track_link(event: Union[NewMessage.Event, Message]):
     users[event.chat_id]["downloading"] = True
     download_status = DownloadStatus(event)
     await download_status.start()
-    file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
+    try:
+        file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
+    except deethon.errors.DeezerLoginError:
+        await download_status.finished()
+        await event.reply(translate.LOGIN_ERROR)
+        users[event.chat_id]["downloading"] = False
+        raise events.StopPropagation
     await download_status.finished()
     file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
     file_name = track.artist + " - " + track.title + file_ext
@@ -107,6 +113,7 @@ async def track_link(event: Union[NewMessage.Event, Message]):
         try:
             album_playlist = deethon.Playlist(event.pattern_match.group(2))
         except deethon.errors.DeezerApiError:
+            await event.delete()
             await event.reply("Playlist non trovata.")
             raise events.StopPropagation
 
@@ -127,8 +134,13 @@ async def track_link(event: Union[NewMessage.Event, Message]):
             break
         download_status = DownloadStatus(event, num + 1, album_playlist.total_tracks)
         await download_status.start()
-        file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
-
+        try:
+            file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
+        except deethon.errors.DeezerLoginError:
+            await download_status.finished()
+            await event.reply(translate.LOGIN_ERROR)
+            users[event.chat_id]["downloading"] = False
+            raise events.StopPropagation
         if not file:
             await bot.send_message(event.chat_id, f"Non posso scaricare\n{track.artist} - {track.title}")
             await download_status.finished()
