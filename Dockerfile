@@ -5,7 +5,7 @@ WORKDIR /app
 COPY ./requirements.txt ./requirements.txt
 
 RUN apk update \
-    && apk add --no-cache gcc g++ musl-dev libffi-dev \
+    && apk add --no-cache gcc g++ libressl-dev musl-dev libffi-dev git \
     && pip install -r requirements.txt \
     && apk del gcc g++ musl-dev libffi-dev
 
