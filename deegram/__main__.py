@@ -46,7 +46,7 @@ async def info(event: Union[NewMessage.Event, Message]):
 
 @bot.on(events.NewMessage(pattern='/log'))
 async def log(event: Union[NewMessage.Event, Message]):
-    await event.reply(file=f'{__name__}.log')
+    await event.reply(file='deegram.log')
     raise events.StopPropagation
 
 
