@@ -183,12 +183,8 @@ async def track_link(event: Union[NewMessage.Event, Message]):
     raise events.StopPropagation
 
 
-@bot.on(events.NewMessage(pattern=r"(.+)?(https?://(youtu\.be|www\.youtube\.com/watch\?v=).+)"))
+@bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://[youtu\.be|www\.youtube\.com/watch\?v=].+)"))
 async def youtube_link(event: Union[NewMessage.Event, Message]):
-
-    if users[event.chat_id]["downloading"]:
-        await event.reply(translate.USER_IS_DOWNLOADING)
-        raise events.StopPropagation
 
     par = {"format": "json", "url": event.pattern_match.group(2)}
     try:
