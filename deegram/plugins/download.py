@@ -179,7 +179,7 @@ async def track_link(event: Union[NewMessage.Event, Message]):
     raise events.StopPropagation
 
 
-@bot.on(events.NewMessage(pattern=r"(.+)?(https?://www\.youtube\.com/watch\?v=.+)"))
+@bot.on(events.NewMessage(pattern=r"(.+)?(https?://(youtu\.be|www\.youtube\.com/watch\?v=).+)"))
 async def youtube_link(event: Union[NewMessage.Event, Message]):
 
     if users[event.chat_id]["downloading"]:
