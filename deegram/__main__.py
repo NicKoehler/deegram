@@ -12,7 +12,7 @@ import time
 
 from telethon import Button, events
 
-from . import bot, botStartTime, logger, plugins
+from . import bot, botStartTime, logger, plugins, OWNER_ID
 from .utils import translate, fetch
 from .utils.bot_utils import get_readable_file_size, get_readable_time
 
@@ -44,7 +44,7 @@ async def info(event: Union[NewMessage.Event, Message]):
     raise events.StopPropagation
 
 
-@bot.on(events.NewMessage(pattern='/log'))
+@bot.on(events.NewMessage(pattern='/log', from_users=OWNER_ID))
 async def log(event: Union[NewMessage.Event, Message]):
     await event.reply(file='deegram.log')
     raise events.StopPropagation
