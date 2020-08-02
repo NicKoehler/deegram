@@ -54,3 +54,5 @@ SEARCH_PLAYLIST = "Cerca una playlist 🎵"
 USER_IS_DOWNLOADING = "Stai già scaricando delle tracce.\nRiprova al termine o premi /stop per fermare il download in corso."
 
 LOGIN_ERROR = "C'è stato un errore durante il collegamento con deezer.\n[Contattami](t.me/nickoehler) e sistemerò il problema."
+
+GENERIC_ERROR = "Si è verificato un errore, riprova."

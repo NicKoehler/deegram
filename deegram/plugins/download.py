@@ -48,11 +48,15 @@ async def track_link(event: Union[NewMessage.Event, Message]):
     try:
         file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
     except deethon.errors.DeezerLoginError:
-        await download_status.finished()
         await event.reply(translate.LOGIN_ERROR)
         users[event.chat_id]["downloading"] = False
         raise events.StopPropagation
-    await download_status.finished()
+    except Exception as e:
+        await event.reply(translate.GENERIC_ERROR)
+        users[event.chat_id]["downloading"] = False
+        raise events.StopPropagation
+    finally:
+        await download_status.finished()
     file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
     file_name = track.artist + " - " + track.title + file_ext
     upload_status = UploadStatus(event)
@@ -137,16 +141,16 @@ async def track_link(event: Union[NewMessage.Event, Message]):
         try:
             file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
         except deethon.errors.DeezerLoginError:
-            await download_status.finished()
             await event.reply(translate.LOGIN_ERROR)
-            users[event.chat_id]["downloading"] = False
-            raise events.StopPropagation
+            continue
+        except Exception as e:
+            await event.reply(translate.GENERIC_ERROR)
+            continue
+        finally:
+            await download_status.finished()
         if not file:
             await bot.send_message(event.chat_id, f"Non posso scaricare\n{track.artist} - {track.title}")
-            await download_status.finished()
             continue
-
-        await download_status.finished()
         file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
         file_name = track.artist + " - " + track.title + file_ext
         upload_status = UploadStatus(event, num + 1, album_playlist.total_tracks)
