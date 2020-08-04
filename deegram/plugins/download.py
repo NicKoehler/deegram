@@ -122,10 +122,6 @@ async def album_playlist_link(event: Union[NewMessage.Event, Message]):
             await event.delete()
             await event.reply("Playlist non trovata.")
             raise events.StopPropagation
-        except deethon.errors.DeezerApiError:
-            await event.delete()
-            await event.reply("Playlist troppo grande.")
-            raise events.StopPropagation
 
         await event.respond(
             translate.PLAYLIST_MSG.format(
@@ -137,53 +133,53 @@ async def album_playlist_link(event: Union[NewMessage.Event, Message]):
 
     quality = users[event.chat_id]["quality"]
     users[event.chat_id]["downloading"] = True
-
-    for num, track in enumerate(album_playlist.tracks):
-        if users[event.chat_id]["stopped"]:
-            users[event.chat_id]['stopped'] = False
-            break
-        download_status = DownloadStatus(event, num + 1, album_playlist.total_tracks)
-        await download_status.start()
-        try:
+    try:
+        for num, track in enumerate(album_playlist.tracks):
+            if users[event.chat_id]["stopped"]:
+                users[event.chat_id]['stopped'] = False
+                break
+            download_status = DownloadStatus(event, num + 1, album_playlist.total_tracks)
+            await download_status.start()
             file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
-        except deethon.errors.DeezerLoginError:
-            await event.reply(translate.LOGIN_ERROR)
-            continue
-        except Exception as e:
-            await event.reply(translate.GENERIC_ERROR)
-            continue
-        finally:
-            await download_status.finished()
-        if not file:
-            await bot.send_message(event.chat_id, f"Non posso scaricare\n{track.artist} - {track.title}")
-            continue
-        file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
-        file_name = track.artist + " - " + track.title + file_ext
-        upload_status = UploadStatus(event, num + 1, album_playlist.total_tracks)
-        await upload_status.start()
-        
-        async with bot.action(event.chat_id, 'audio'):
-            uploaded_file = await upload_file(
-                file_name=file_name,
-                client=bot,
-                file=open(file, 'rb'),
-                progress_callback=upload_status.progress,
-            )
-            await upload_status.finished()
-            await bot.send_file(
-                event.chat_id,
-                uploaded_file,
-                thumb=track.album.cover_medium,
-                attributes=[
-                    DocumentAttributeAudio(
-                        voice=False,
-                        title=track.title,
-                        duration=track.duration,
-                        performer=track.artist,
-                    )
-                ],
-            )
-        remove(file)
+            if not file:
+                await bot.send_message(event.chat_id, f"Non posso scaricare\n{track.artist} - {track.title}")
+                await download_status.finished()
+                continue
+            file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
+            file_name = track.artist + " - " + track.title + file_ext
+            upload_status = UploadStatus(event, num + 1, album_playlist.total_tracks)
+            await upload_status.start()
+            
+            async with bot.action(event.chat_id, 'audio'):
+                uploaded_file = await upload_file(
+                    file_name=file_name,
+                    client=bot,
+                    file=open(file, 'rb'),
+                    progress_callback=upload_status.progress,
+                )
+                await upload_status.finished()
+                await bot.send_file(
+                    event.chat_id,
+                    uploaded_file,
+                    thumb=track.album.cover_medium,
+                    attributes=[
+                        DocumentAttributeAudio(
+                            voice=False,
+                            title=track.title,
+                            duration=track.duration,
+                            performer=track.artist,
+                        )
+                    ],
+                )
+            remove(file)
+    except deethon.errors.DeezerLoginError:
+        await event.reply(translate.LOGIN_ERROR)
+    except deethon.errors.DeezerApiError:
+        await event.reply("Playlist troppo grande.")
+    except Exception as e:
+        await event.reply(translate.GENERIC_ERROR)
+    finally:
+        await download_status.finished()
 
     await event.reply(translate.END_MSG)
     users[event.chat_id]["downloading"] = False
