@@ -3,8 +3,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import deethon
-import requests
 from os import remove
+from gazpacho import get, Soup
+from gazpacho.get import HTTPError
 from telethon import events, Button
 from json.decoder import JSONDecodeError
 from telethon.tl.types import DocumentAttributeAudio
@@ -190,13 +191,41 @@ async def album_playlist_link(event: Union[NewMessage.Event, Message]):
 async def youtube_link(event: Union[NewMessage.Event, Message]):
 
     par = {"format": "json", "url": event.pattern_match.group(2)}
+
     try:
-        track_name = requests.get("https://www.youtube.com/oembed", par).json()['title']
+        track_name = get("https://www.youtube.com/oembed", par)['title']
 
         await event.respond("Vuoi cercare questa canzone? Tocca il tasto qui sotto", buttons=[
             [Button.switch_inline(translate.SEARCH_TRACK, query=track_name, same_peer=True)]
         ])
         raise events.StopPropagation
 
-    except JSONDecodeError:
+    except HTTPError:
+        pass
+
+@bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://play\.google\.com/music/preview/.+)"))
+async def google_play_link(event: Union[NewMessage.Event, Message]):
+
+    try:
+        html = get(event.pattern_match.group(2))
+
+        soup = Soup(html)
+
+        title = soup.find('div', {'class': 'title fade-out'})
+        artist = soup.find('div', {'class': 'album-artist fade-out'})
+        
+        await event.respond(
+            "Vuoi cercare questa canzone? Tocca il tasto qui sotto",
+            buttons=[
+                [Button.switch_inline(
+                    translate.SEARCH_TRACK,
+                    query='%s - %s' % (title.text, artist.text),
+                    same_peer=True
+                    )
+                ]
+            ]
+        )
+        raise events.StopPropagation
+    
+    except HTTPError:
         pass
