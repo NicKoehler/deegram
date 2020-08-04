@@ -7,7 +7,6 @@ from os import remove
 from gazpacho import get, Soup
 from gazpacho.get import HTTPError
 from telethon import events, Button
-from json.decoder import JSONDecodeError
 from telethon.tl.types import DocumentAttributeAudio
 
 from .. import bot, users, deezer
@@ -122,6 +121,10 @@ async def album_playlist_link(event: Union[NewMessage.Event, Message]):
         except deethon.errors.DeezerApiError:
             await event.delete()
             await event.reply("Playlist non trovata.")
+            raise events.StopPropagation
+        except deethon.errors.DeezerApiError:
+            await event.delete()
+            await event.reply("Playlist troppo grande.")
             raise events.StopPropagation
 
         await event.respond(
