@@ -173,16 +173,16 @@ async def album_playlist_link(event: Union[NewMessage.Event, Message]):
                     ],
                 )
             remove(file)
+        await event.reply(translate.END_MSG)
     except deethon.errors.DeezerLoginError:
         await event.reply(translate.LOGIN_ERROR)
     except deethon.errors.DeezerApiError:
         await event.reply("Playlist troppo grande.")
     except Exception as e:
         await event.reply(translate.GENERIC_ERROR)
-
-    await event.reply(translate.END_MSG)
-    users[event.chat_id]["downloading"] = False
-    raise events.StopPropagation
+    finally:
+        users[event.chat_id]["downloading"] = False
+        raise events.StopPropagation
 
 
 @bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://[youtu\.be|www\.youtube\.com/watch\?v=].+)"))
