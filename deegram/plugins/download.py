@@ -4,6 +4,7 @@ from typing import TYPE_CHECKING
 
 import deethon
 import requests
+from os import remove
 from telethon import events, Button
 from json.decoder import JSONDecodeError
 from telethon.tl.types import DocumentAttributeAudio
@@ -84,11 +85,12 @@ async def track_link(event: Union[NewMessage.Event, Message]):
         )
     await event.reply(translate.END_MSG)
     users[event.chat_id]["downloading"] = False
+    remove(file)
     raise events.StopPropagation
 
 
 @bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?deezer\.com/(?:\w+/)?(album|playlist)/(\d+)"))
-async def track_link(event: Union[NewMessage.Event, Message]):
+async def album_playlist_link(event: Union[NewMessage.Event, Message]):
 
     if users[event.chat_id]["downloading"]:
         await event.reply(translate.USER_IS_DOWNLOADING)
@@ -177,6 +179,7 @@ async def track_link(event: Union[NewMessage.Event, Message]):
                     )
                 ],
             )
+        remove(file)
 
     await event.reply(translate.END_MSG)
     users[event.chat_id]["downloading"] = False
