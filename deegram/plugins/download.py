@@ -145,6 +145,7 @@ async def album_playlist_link(event: Union[NewMessage.Event, Message]):
                 await bot.send_message(event.chat_id, f"Non posso scaricare\n{track.artist} - {track.title}")
                 await download_status.finished()
                 continue
+            await download_status.finished()
             file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
             file_name = track.artist + " - " + track.title + file_ext
             upload_status = UploadStatus(event, num + 1, album_playlist.total_tracks)
@@ -178,8 +179,6 @@ async def album_playlist_link(event: Union[NewMessage.Event, Message]):
         await event.reply("Playlist troppo grande.")
     except Exception as e:
         await event.reply(translate.GENERIC_ERROR)
-    finally:
-        await download_status.finished()
 
     await event.reply(translate.END_MSG)
     users[event.chat_id]["downloading"] = False
