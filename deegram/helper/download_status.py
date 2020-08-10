@@ -11,15 +11,12 @@ logger = logging.getLogger(__name__)
 
 
 class DownloadStatus:
-    def __init__(self, event, track_count: int = None, total_tracks: int = None):
+    def __init__(self, event):
         self._current = 0
         self._total = 0
         self._event = event
         self._message = None
         self._start_time = 0.0
-        self._update_time = 0.0
-        self._track_count = track_count
-        self._total_tracks = total_tracks
 
     @property
     def download_speed(self) -> float:
@@ -35,22 +32,14 @@ class DownloadStatus:
             if self._total and self._total == self._current:
                 return
             if self._total:
-                
-                if (time.time() - self._update_time) > 1:
-                    msg = ""
-                if self._track_count:
-                    msg += f" 💿 Traccia {self._track_count} di {self._total_tracks}\n"
-                
-                msg += (
-                    f"🔽 Scaricando... {(self._current / self._total):.1%}\n"
-                    f"⚡ Velocità: {get_readable_file_size(self.download_speed)}/s"
-                )
                 try:
-                    await self._message.edit(msg)
+                    await self._message.edit(
+                        f"🔽 Scaricando... {(self._current / self._total):.1%}\n"
+                        f"⚡ Velocità: {get_readable_file_size(self.download_speed)}/s")
                 except MessageNotModifiedError:
                     logger.debug("Messaggio non modificato")
                 except ZeroDivisionError:
-                    logger.debug("Impossibile dividere per zero")
+                    logger.debug("Divisione per zero")
             await asyncio.sleep(1)
 
     def progress(self, current: int, total: int) -> None:
