@@ -89,102 +89,6 @@ async def track_link(event: Union[NewMessage.Event, Message]):
     raise events.StopPropagation
 
 
-# @bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?deezer\.com/(?:\w+/)?(album|playlist)/(\d+)"))
-# async def album_playlist_link(event: Union[NewMessage.Event, Message]):
-
-#     if users[event.chat_id]["downloading"]:
-#         await event.reply(translate.USER_IS_DOWNLOADING)
-#         raise events.StopPropagation
-    
-#     # if is an album
-#     if event.pattern_match.group(1) == 'album':
-#         try:    
-#             album_playlist = deethon.Album(event.pattern_match.group(2))
-#         except deethon.errors.DeezerApiError:
-#             await event.reply("Album non trovato.")
-#             raise events.StopPropagation
-
-#         await event.respond(
-#             translate.ALBUM_MSG.format(
-#                 album_playlist.title,
-#                 album_playlist.artist,
-#                 get_italian_date_format(album_playlist.release_date),
-#                 album_playlist.total_tracks,
-#             ),
-#             file=album_playlist.cover_xl,
-#         )
-
-#     # if is a playlist
-#     elif event.pattern_match.group(1) == 'playlist':
-#         try:
-#             album_playlist = deethon.Playlist(event.pattern_match.group(2))
-#         except deethon.errors.DeezerApiError:
-#             await event.delete()
-#             await event.reply("Playlist non trovata.")
-#             raise events.StopPropagation
-
-#         await event.respond(
-#             translate.PLAYLIST_MSG.format(
-#                 album_playlist.title,
-#                 album_playlist.total_tracks,
-#             ),
-#             file=album_playlist.picture_xl,
-#         )
-
-#     quality = users[event.chat_id]["quality"]
-#     users[event.chat_id]["downloading"] = True
-#     try:
-#         for num, track in enumerate(album_playlist.tracks):
-#             if users[event.chat_id]["stopped"]:
-#                 users[event.chat_id]['stopped'] = False
-#                 break
-#             download_status = DownloadStatus(event, num + 1, album_playlist.total_tracks)
-#             await download_status.start()
-#             file = await bot.loop.run_in_executor(None, deezer.download_track, track, quality, download_status.progress)
-#             if not file:
-#                 await bot.send_message(event.chat_id, f"Non posso scaricare\n{track.artist} - {track.title}")
-#                 await download_status.finished()
-#                 continue
-#             await download_status.finished()
-#             file_ext = ".mp3" if quality.startswith("MP3") else ".flac"
-#             file_name = track.artist + " - " + track.title + file_ext
-#             upload_status = UploadStatus(event, num + 1, album_playlist.total_tracks)
-#             await upload_status.start()
-            
-#             async with bot.action(event.chat_id, 'audio'):
-#                 uploaded_file = await upload_file(
-#                     file_name=file_name,
-#                     client=bot,
-#                     file=open(file, 'rb'),
-#                     progress_callback=upload_status.progress,
-#                 )
-#                 await upload_status.finished()
-#                 await bot.send_file(
-#                     event.chat_id,
-#                     uploaded_file,
-#                     thumb=track.album.cover_medium,
-#                     attributes=[
-#                         DocumentAttributeAudio(
-#                             voice=False,
-#                             title=track.title,
-#                             duration=track.duration,
-#                             performer=track.artist,
-#                         )
-#                     ],
-#                 )
-#             remove(file)
-#         await event.reply(translate.END_MSG)
-#     except deethon.errors.DeezerLoginError:
-#         await event.reply(translate.LOGIN_ERROR)
-#     except deethon.errors.DeezerApiError:
-#         await event.reply("Playlist troppo grande.")
-#     except Exception as e:
-#         await event.reply(translate.GENERIC_ERROR)
-#     finally:
-#         users[event.chat_id]["downloading"] = False
-#         raise events.StopPropagation
-
-
 @bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://[youtu\.be|www\.youtube\.com/watch\?v=].+)"))
 async def youtube_link(event: Union[NewMessage.Event, Message]):
 
@@ -200,6 +104,7 @@ async def youtube_link(event: Union[NewMessage.Event, Message]):
 
     except HTTPError:
         pass
+
 
 @bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://play\.google\.com/music/preview/.+)"))
 async def google_play_link(event: Union[NewMessage.Event, Message]):
@@ -227,15 +132,6 @@ async def google_play_link(event: Union[NewMessage.Event, Message]):
     
     except HTTPError:
         pass
-
-
-
-
-
-
-
-
-
 
 
 @bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?deezer\.com/(?:\w+/)?(album|playlist)/(\d+)"))
