@@ -43,7 +43,7 @@ TRACK_MSG = (
 	"📅 Data di rilascio: {}"
 )
 PLAYLIST_MSG = (
-	"🎵 Titolo: {}\n"
+	"🎵 Titolo playlist: {}\n"
 	"🎧 Tracce totali: {}"
 )
 CHOOSE = "Scegli cosa fare:"

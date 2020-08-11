@@ -48,11 +48,5 @@ def get_readable_time(secs: float) -> str:
 
 
 def get_italian_date_format(date: str) -> str:
-    if date:
-        date = str(date)
-        temp = date.split(' ')[0].split('-')
-        res = '%s/%s/%s' % (temp[2], temp[1], temp[0])
-    else:
-        res = 'Sconosciuta'
-    
-    return res
+
+    return date.strftime('%d/%m/%Y') if date else 'Sconosciuta'
