@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 import deethon
+from re import search
 from os import remove
 from gazpacho import get, Soup
 from gazpacho.get import HTTPError
@@ -87,51 +88,6 @@ async def track_link(event: Union[NewMessage.Event, Message]):
     users[event.chat_id]["downloading"] = False
     remove(file)
     raise events.StopPropagation
-
-
-@bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://[youtu\.be|www\.youtube\.com/watch\?v=].+)"))
-async def youtube_link(event: Union[NewMessage.Event, Message]):
-
-    par = {"format": "json", "url": event.pattern_match.group(2)}
-
-    try:
-        track_name = get("https://www.youtube.com/oembed", par)['title']
-
-        await event.respond("Vuoi cercare questa canzone? Tocca il tasto qui sotto", buttons=[
-            [Button.switch_inline(translate.SEARCH_TRACK, query=track_name, same_peer=True)]
-        ])
-        raise events.StopPropagation
-
-    except HTTPError:
-        pass
-
-
-@bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://play\.google\.com/music/preview/.+)"))
-async def google_play_link(event: Union[NewMessage.Event, Message]):
-
-    try:
-        html = get(event.pattern_match.group(2))
-
-        soup = Soup(html)
-
-        title = soup.find('div', {'class': 'title fade-out'})
-        artist = soup.find('div', {'class': 'album-artist fade-out'})
-        
-        await event.respond(
-            "Vuoi cercare questa canzone? Tocca il tasto qui sotto",
-            buttons=[
-                [Button.switch_inline(
-                    translate.SEARCH_TRACK,
-                    query='%s - %s' % (title.text, artist.text),
-                    same_peer=True
-                    )
-                ]
-            ]
-        )
-        raise events.StopPropagation
-    
-    except HTTPError:
-        pass
 
 
 @bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?deezer\.com/(?:\w+/)?(album|playlist)/(\d+)"))
@@ -231,3 +187,82 @@ async def album_playlist_link(event: Union[NewMessage.Event, Message]):
     await event.reply(translate.END_MSG)
     users[event.chat_id]["downloading"] = False
     raise events.StopPropagation
+
+
+@bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://[youtu\.be|www\.youtube\.com/watch\?v=].+)"))
+async def youtube_link(event: Union[NewMessage.Event, Message]):
+    
+    link = event.pattern_match.group(2)
+
+    par = {"format": "json", "url": link}
+
+    try:
+        track_name = get("https://www.youtube.com/oembed", par)['title']
+
+        await event.respond("Vuoi cercare questa canzone? Tocca il tasto qui sotto", buttons=[
+            [Button.switch_inline(translate.SEARCH_TRACK,
+                                    query=track_name, same_peer=True)]
+        ])
+        raise events.StopPropagation
+
+    except HTTPError:
+        pass
+
+
+@bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://play\.google\.com/music/preview/.+)"))
+async def google_play_link(event: Union[NewMessage.Event, Message]):
+
+    try:
+        html = get(event.pattern_match.group(2))
+
+        soup = Soup(html)
+
+        title = soup.find('div', {'class': 'title fade-out'})
+        artist = soup.find('div', {'class': 'album-artist fade-out'})
+
+        await event.respond(
+            "Vuoi cercare questa canzone? Tocca il tasto qui sotto",
+            buttons=[
+                [Button.switch_inline(
+                    translate.SEARCH_TRACK,
+                    query='%s - %s' % (title.text, artist.text),
+                    same_peer=True
+                    )
+                ]
+            ]
+        )
+        raise events.StopPropagation
+
+    except HTTPError:
+        pass
+
+
+@bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://www\.shazam\.com/track/.+)"))
+async def shazam_link(event: Union[NewMessage.Event, Message]):
+
+    link = event.pattern_match.group(2)
+
+    track_id = search(r'/(\d+)/', link).group(1)
+
+    url = 'https://www.shazam.com/discovery/v5/en-US/IT/web/-/track/%s' 
+   
+    try:
+        json = get(url % track_id)
+
+        title = json['share']['subject']
+
+        await event.respond(
+            "Vuoi cercare questa canzone? Tocca il tasto qui sotto",
+            buttons=[
+                [Button.switch_inline(
+                    translate.SEARCH_TRACK,
+                    query=title,
+                    same_peer=True
+                    )
+                ]
+            ]
+        )
+        raise events.StopPropagation
+
+    except HTTPError:
+        pass
