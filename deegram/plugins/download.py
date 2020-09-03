@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     from telethon.events import NewMessage
 
 
-@bot.on(events.NewMessage(pattern=r"[\S\s]*?(https?://(?:www\.)?deezer\.com/(?:\w+/)?track/(\d+))"))
+@bot.on(events.NewMessage(pattern=r"[\S\s]*?https?://(?:www\.)?deezer\.com/(?:\w+/)?track/(\d+)"))
 async def track_link(event: Union[NewMessage.Event, Message]):
 
     if users[event.chat_id]["downloading"]:
@@ -90,7 +90,7 @@ async def track_link(event: Union[NewMessage.Event, Message]):
     raise events.StopPropagation
 
 
-@bot.on(events.NewMessage(pattern=r"[\S\s]*?(https?://(?:www\.)?deezer\.com/(?:\w+/)?(album|playlist)/(\d+))"))
+@bot.on(events.NewMessage(pattern=r"[\S\s]*?https?://(?:www\.)?deezer\.com/(?:\w+/)?(album|playlist)/(\d+)"))
 async def album_playlist_link(event: Union[NewMessage.Event, Message]):
 
     if users[event.chat_id]["downloading"]:
