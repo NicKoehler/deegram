@@ -23,7 +23,7 @@ if TYPE_CHECKING:
     from telethon.events import NewMessage
 
 
-@bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?deezer\.com/(?:\w+/)?track/(\d+)"))
+@bot.on(events.NewMessage(pattern=r"[\S\s]*?(https?://(?:www\.)?deezer\.com/(?:\w+/)?track/(\d+))"))
 async def track_link(event: Union[NewMessage.Event, Message]):
 
     if users[event.chat_id]["downloading"]:
@@ -90,7 +90,7 @@ async def track_link(event: Union[NewMessage.Event, Message]):
     raise events.StopPropagation
 
 
-@bot.on(events.NewMessage(pattern=r"https?://(?:www\.)?deezer\.com/(?:\w+/)?(album|playlist)/(\d+)"))
+@bot.on(events.NewMessage(pattern=r"[\S\s]*?(https?://(?:www\.)?deezer\.com/(?:\w+/)?(album|playlist)/(\d+))"))
 async def album_playlist_link(event: Union[NewMessage.Event, Message]):
 
     if users[event.chat_id]["downloading"]:
@@ -189,10 +189,10 @@ async def album_playlist_link(event: Union[NewMessage.Event, Message]):
     raise events.StopPropagation
 
 
-@bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://[youtu\.be|www\.youtube\.com/watch\?v=].+)"))
+@bot.on(events.NewMessage(pattern=r"[\S\s]*?(https?://[youtu\.be|www\.youtube\.com/watch\?v=].+)"))
 async def youtube_link(event: Union[NewMessage.Event, Message]):
     
-    link = event.pattern_match.group(2)
+    link = event.pattern_match.group(1)
 
     par = {"format": "json", "url": link}
 
@@ -209,11 +209,11 @@ async def youtube_link(event: Union[NewMessage.Event, Message]):
         pass
 
 
-@bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://play\.google\.com/music/preview/.+)"))
+@bot.on(events.NewMessage(pattern=r"[\S\s]*?(https?://play\.google\.com/music/preview/.+)"))
 async def google_play_link(event: Union[NewMessage.Event, Message]):
 
     try:
-        html = get(event.pattern_match.group(2))
+        html = get(event.pattern_match.group(1))
 
         soup = Soup(html)
 
@@ -237,10 +237,10 @@ async def google_play_link(event: Union[NewMessage.Event, Message]):
         pass
 
 
-@bot.on(events.NewMessage(pattern=r"(.+\s)*(https?://www\.shazam\.com/track/.+)"))
+@bot.on(events.NewMessage(pattern=r"[\S\s]*?(https?://www\.shazam\.com/track/.+)"))
 async def shazam_link(event: Union[NewMessage.Event, Message]):
 
-    link = event.pattern_match.group(2)
+    link = event.pattern_match.group(1)
 
     track_id = search(r'/(\d+)/', link).group(1)
 
