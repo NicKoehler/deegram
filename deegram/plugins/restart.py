@@ -16,7 +16,7 @@ if path.exists('restart.pickle'):
     remove('restart.pickle')
 
 
-@bot.on(events.NewMessage(pattern='/riavvia', from_users=OWNER_ID))
+@bot.on(events.NewMessage(pattern='/riavvia'))
 async def restart(event):
     restart_message = await event.reply("Sto riavviando...")
     with open('restart.pickle', 'wb') as status:
